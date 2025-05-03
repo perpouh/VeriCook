@@ -1,52 +1,67 @@
-# README
-## Project Title / プロジェクトのタイトル
+# Vericook
 
-One Paragraph of project description goes here  
-プロジェクトの概要を 1 段落でここに書きます
+Vericook は、Google カスタム検索 API を使用して、信頼できる企業サイトからレシピを検索するアプリケーションです。
 
-## Getting Started / スタートガイド
-These instructions will get you a copy of the project up and running on your local machine for development and testing purposes. See deployment for notes on how to deploy the project on a live system.
-プロジェクトを複製してローカル端末で実行し、開発や検証ができるまでの手順を説明します。実際のシステムにプロジェクトをデプロイする方法については、デプロイの項目を参照してください。
+## プロジェクトセットアップ
 
-## Prerequisites / 必要条件
-What things you need to install the software and how to install them  
-プロジェクトを走らせるためにはどんなソフトウェアが必要で、それらをどのようにインストールするか
+### 必要な依存関係をインストール
 
-## Installing / インストール
-A step by step series of examples that tell you how to get a development env running  
-動作する開発環境の構築方法を段階的に例示します
+```bash
+docker build -t vericook .
+```
 
-## Running the tests / テストの実行
-Explain how to run the automated tests for this system  
-自動テストをどのように実行するかをここで説明します
+### 開発サーバーの起動
 
-## Deployment / デプロイ
-Add additional notes about how to deploy this on a live system  
-実際のシステムにデプロイするための補足的な説明を行います
+```bash
+docker run --name vericook -it -p 80:80 -v .:/app vericook
+```
 
-## Built With / 協働するシステムのリスト
- - Dropwizard - The web framework used / 使用した web フレームワーク
- - Maven - Dependency Management / 依存関係管理ソフトウェア
- - ROME - Used to generate RSS Feeds / 使用した RSS フィード生成
+### 本番用ビルド
 
-## Contributing / コントリビューション
-Please read CONTRIBUTING.md for details on our code of conduct, and the process for submitting pull requests to us.  
-私たちのコーディング規範とプルリクエストの手順についての詳細はCONTRIBUTING.md を参照してください。
+```bash
+npm run build
+```
 
-## Versioning / バージョン管理
-We use SemVer for versioning. For the versions available, see the tags on this repository.  
-私たちはバージョン管理に SemVerを使用しています。利用可能なバージョンはこのリポジトリのタグを参照してください。
+### コードのリントと修正
+以下のコマンドでコードのリントを実行し、自動修正を行います。
+```bash
+npm run lint
+```
 
-## Authors / 著者
-Billie Thompson - Initial work / 原著者 - PurpleBooth  
-See also the list of contributors who participated in this project.  
-このプロジェクトへの貢献者のリストもご覧ください。
+## 環境変数の設定
 
-## License / ライセンス
-This project is licensed under the MIT License - see the LICENSE.md file for details  
-このプロジェクトは MIT ライセンスの元にライセンスされています。 詳細はLICENSE.mdをご覧ください。
+アプリケーションで Google カスタム検索 API を使用するために、以下の環境変数を設定してください。
 
-## Acknowledgments / 謝辞
-### Hat tip to anyone whose code was used / コードを書いた人への感謝
-### Inspiration / 何からインスピレーションを得たか
-### etc / その他
+### `.env` ファイルの例
+```
+VUE_APP_GOOGLE_API_KEY=your-google-api-key
+VUE_APP_GOOGLE_API_CX=your-google-api-cx
+```
+
+- **`VUE_APP_GOOGLE_API_KEY`**: Google Cloud Console で取得した API キー。
+- **`VUE_APP_GOOGLE_API_CX`**: Google カスタム検索エンジンの識別子。
+
+## デプロイ
+
+### GitHub Pages にデプロイ
+1. プロジェクトを本番用にビルドします。
+   ```bash
+   npm run build
+   ```
+2. ビルドされた `dist` ディレクトリを GitHub Pages にデプロイします。
+
+GitHub Actions を使用して自動デプロイする場合は、リポジトリの Secrets に以下の環境変数を設定してください。
+- `VUE_APP_GOOGLE_API_KEY`
+- `VUE_APP_GOOGLE_API_CX`
+
+**メモ**
+ - [cxはここ](https://programmablesearchengine.google.com/controlpanel/all)
+ - [apiKeyはここ](https://console.cloud.google.com/apis/dashboard)
+
+
+## ライセンス
+このプロジェクトは [MIT ライセンス](LICENSE) のもとで公開されています。
+
+## 参考リンク
+- [Vue CLI ドキュメント](https://cli.vuejs.org/config/)
+- [Google カスタム検索 API](https://developers.google.com/custom-search/v1/overview)
