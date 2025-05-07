@@ -28,6 +28,12 @@
       </div>
       <img :src="result.thmbnail" :alt="result.title" class="thmbnail" />
     </article>
+
+    <div v-if="results.length > 0" class="pagination">
+      <button :disabled="currentPage === 1" @click="changePage(currentPage)">Previous</button>
+      <span>Page {{ currentPage }} of {{ totalPages }}</span>
+      <button :disabled="currentPage === totalPages" @click="changePage(currentPage + 1)">Next</button>
+    </div>
   </div>
 </template>
 
@@ -37,7 +43,16 @@ export default {
     return {
       query: "",
       results: [],
+      currentPage: 1,
+      resultsPerPage: 10,
+      totalResults: 0,
+      nextIndex: 0,
     };
+  },
+  computed: {
+    totalPages() {
+      return Math.ceil(this.totalResults / this.resultsPerPage);
+    },
   },
   methods: {
     async search() {
@@ -56,7 +71,7 @@ export default {
 
       const url = `https://www.googleapis.com/customsearch/v1?q=${encodeURIComponent(
         this.query
-      )}&key=${apiKey}&cx=${cx}`;
+      )}&key=${apiKey}&cx=${cx}&start=${this.nextIndex}`;
 
       try {
         const response = await fetch(url);
@@ -71,6 +86,10 @@ export default {
             displayLink: item.displayLink,
             thmbnail: item.pagemap?.cse_thumbnail?.[0]?.src || "https://placehold.jp/150x150.png",
           }));
+
+          this.totalResults = data.queries.nextPage[0].totalResults
+          this.nextIndex = data.queries.nextPage[0].startIndex
+          this.currentPage = parseInt(data.queries.request[0].startIndex/10+1);
         } else {
           this.results = [];
           alert("No results found.");
@@ -79,6 +98,10 @@ export default {
         console.error("Error fetching search results:", error);
         alert("An error occurred while fetching search results.");
       }
+    },
+    changePage(page) {
+      this.currentPage = page;
+      this.search();
     },
   },
 };
@@ -152,5 +175,31 @@ h3 {
   height: 92px;
   object-fit: cover;
   border-radius: 8px;
+}
+
+/* 既存のスタイルに加えてページング用のスタイルを追加 */
+.pagination {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-top: 20px;
+}
+
+.pagination button {
+  padding: 8px 16px;
+  margin: 0 10px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  background-color: #f8f8f8;
+  cursor: pointer;
+}
+
+.pagination button:disabled {
+  background-color: #e0e0e0;
+  cursor: not-allowed;
+}
+
+.pagination span {
+  font-size: 14px;
 }
 </style>
