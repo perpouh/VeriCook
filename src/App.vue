@@ -1,6 +1,13 @@
 <template>
   <div id="app">
-    <h1>Google Search</h1>
+    <header>
+      <h1><img src="fe1b7179-953a-4beb-8959-d6e897d3d619.png" alt="VeriCook" class="logo"></h1>
+      <div class="powered-by-google">
+        <img src="https://www.google.com/images/branding/googlelogo/2x/googlelogo_color_92x30dp.png" alt="Google logo" height="20">
+        <span>Powered by Google</span>
+      </div>
+    </header>
+
     <div>
       <input
         type="text"
@@ -9,14 +16,18 @@
       />
       <button @click="search">Search</button>
     </div>
-    <ul v-if="results.length">
-      <li v-for="(result, index) in results" :key="index">
-        <a :href="result.link" target="_blank">
-          {{ result.title }}
-        </a>
-      </li>
-    </ul>
-    
+    <h2 v-if="results.length">「{{query}}」の検索結果</h2>
+    <article class="result" v-for="(result, index) in results" :key="index">
+      <div class="result-header">
+        <div class="meta">
+          <span class="sitename">{{ result.site_name }}</span>
+          <small class="domain">{{ result.displayLink }}</small>
+        </div>
+        <h3><a :href="result.link" target="_blank">{{ result.title }}</a></h3>
+        <p class="description">{{ result.description }}</p>
+      </div>
+      <img :src="result.thmbnail" :alt="result.title" class="thmbnail" />
+    </article>
   </div>
 </template>
 
@@ -55,6 +66,10 @@ export default {
           this.results = data.items.map((item) => ({
             title: item.title,
             link: item.link,
+            site_name: item.pagemap?.metatags?.[0]?.["og:site_name"],
+            description: item.snippet,
+            displayLink: item.displayLink,
+            thmbnail: item.pagemap?.cse_thumbnail?.[0]?.src || "https://placehold.jp/150x150.png",
           }));
         } else {
           this.results = [];
@@ -72,27 +87,34 @@ export default {
 <style>
 #app {
   font-family: Arial, sans-serif;
-  text-align: center;
   margin-top: 50px;
+}
+
+@media (min-width: 800px) {
+  #app {
+    margin: 0 auto;
+    max-width: 800px;
+  }
 }
 
 input {
   padding: 8px;
-  width: 300px;
+  width: 240px;
   margin-right: 10px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
 }
 
 button {
   padding: 8px 16px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
 }
 
-ul {
-  list-style-type: none;
-  padding: 0;
-}
-
-li {
-  margin: 10px 0;
+article {
+  max-width: 800px;
+  display: flex;
+  margin-top: 18px;
 }
 
 a {
@@ -102,5 +124,33 @@ a {
 
 a:hover {
   text-decoration: underline;
+}
+
+h3 {
+  margin-top: 4px;
+  font-size: 20px;
+}
+
+.sitename, .domain {
+  font-size: 12px;
+  color: #555;
+}
+
+.logo {
+  width: 200px;
+  height: auto;
+  margin-top: 4px;
+}
+
+.description {
+  font-size: 14px;
+  color: #333;
+}
+
+.thmbnail {
+  width: 92px;
+  height: 92px;
+  object-fit: cover;
+  border-radius: 8px;
 }
 </style>
