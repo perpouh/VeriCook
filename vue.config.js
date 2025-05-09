@@ -6,4 +6,5 @@ module.exports = defineConfig({
     host: '0.0.0.0', // 外部アクセスを許可
     port: 80, // ポート番号
   },
+  publicPath: '/VeriCook/' // リポジトリ名を指定
 })
