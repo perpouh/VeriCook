@@ -2,6 +2,8 @@
 
 Vericook は、Google カスタム検索 API を使用して、信頼できる企業サイトからレシピを検索するアプリケーションです。
 
+[![Deploy to GitHub Pages](https://github.com/perpouh/VeriCook/actions/workflows/deploy.yml/badge.svg?branch=main)](https://github.com/perpouh/VeriCook/actions/workflows/deploy.yml)
+
 ## プロジェクトセットアップ
 
 ### 必要な依存関係をインストール
